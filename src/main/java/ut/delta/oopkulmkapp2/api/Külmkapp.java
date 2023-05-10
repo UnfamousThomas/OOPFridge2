@@ -59,6 +59,10 @@ public class Külmkapp {
 
     }
 
+    public int getKülmkapiSuurus() {
+        return külmkapiSuurus;
+    }
+
     /**
      * Tühjendab külmkapi.
      */
@@ -190,10 +194,11 @@ public class Külmkapp {
     /**
      * Näitab külmkapi sisu ja kui midagi on halvaks läinud, siis ka seda
      */
-    public void näitaKülmkappi() {
+    public String näitaKülmkappi() {
         System.out.println("Näitan külmkappi (suurusega " + külmkapiSuurus + ")");
-
+        ArrayList<String> tooted = new ArrayList<>();
         for (Ese ese : asjadKülmikus) {
+            tooted.add(ese.toString());
             if(!ese.kasOnHalvaksLäinud()) {
                 System.out.println(ese.getEsemeNimetus() + " - " + ese.getKogus() + " - " + sdf.format(ese.getLähebHalvaks()));
             } else {
@@ -201,6 +206,7 @@ public class Külmkapp {
 
             }
         }
+        return tooted.toString();
     }
 
 
