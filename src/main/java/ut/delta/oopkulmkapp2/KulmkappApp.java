@@ -75,10 +75,11 @@ public class KulmkappApp extends Application {
         Button sisesta = new Button("Esita");
         sisesta.setOnAction(actionEvent -> {
             suurus = Integer.parseInt(sisend.getText());
+            külmkapp = new Külmkapp(suurus);
             stage.setScene(uusStseen(külmkapp, stage));
         });
         VBox root = new VBox();
-        root.getChildren().addAll(pealkiri, sisend);
+        root.getChildren().addAll(pealkiri, sisend, sisesta);
         root.setAlignment(Pos.CENTER);
         root.setSpacing(10);
         return new Scene(root, 400, 300);
@@ -93,10 +94,11 @@ public class KulmkappApp extends Application {
     private Scene uusStseen(Külmkapp külmkapp, Stage stage) {
         Label pealkiri = new Label("Mida soovid teha?");
         Label esimene = new Label("1 - Näita külmkapi esemeid");
-        Label teine = new Label("2 - Eemalda ese külmkapist");
-        Label kolmas = new Label("3 - Eemalda kõik halvaks läinud esemed");
-        Label neljas = new Label("4 - Võta suvaline ese külmkapist");
-        Label viies = new Label("5 - Salvesta külmkapp ja lõpeta töö");
+        Label teine = new Label("2 - Lisa külmkappi ese");
+        Label kolmas = new Label("3 - Eemalda ese külmkapist");
+        Label neljas = new Label("4 - Eemalda kõik halvaks läinud esemed");
+        Label viies = new Label("5 - Võta suvaline ese külmkapist");
+        Label kuues = new Label("6 - Salvesta külmkapp ja lõpeta töö");
         valik = new TextField();
         //TODO kui jõuab need nupputeks teha nii et pole numbreid vaja sisestada
         Button sisesta = new Button("Esita");
@@ -105,12 +107,15 @@ public class KulmkappApp extends Application {
             if (Integer.parseInt(valikTekst) == 1)
                 stage.setScene(looSisuStseen(stage));
             if (Integer.parseInt(valikTekst) == 2)
+                stage.setScene(lisaEse(stage));
                 stage.setScene(looEemaldaEseTseen(stage));
             if (Integer.parseInt(valikTekst) == 3)
-                stage.setScene(looHalvaksLäinudEemalduseTseen(stage));
+                stage.setScene(lisaEse(stage));
             if (Integer.parseInt(valikTekst) == 4)
+                stage.setScene(looHalvaksLäinudEemalduseTseen(stage));
+            if (Integer.parseInt(valikTekst) == 5)
                 stage.setScene(looSuvaliseEsemeStseen(stage));
-            if (Integer.parseInt(valikTekst) == 5) {
+            if (Integer.parseInt(valikTekst) == 6) {
                 try {
                     külmkapp.salvestaKülmkapp(failiNimi);
                     System.exit(0);
@@ -120,7 +125,36 @@ public class KulmkappApp extends Application {
             }
         });
         VBox root = new VBox();
-        root.getChildren().addAll(pealkiri, esimene, teine, kolmas, neljas, viies, valik, sisesta);
+        root.getChildren().addAll(pealkiri, esimene, teine, kolmas, neljas, viies, kuues, valik, sisesta);
+        root.setAlignment(Pos.CENTER);
+        root.setSpacing(10);
+        return new Scene(root, 400, 300);
+    }
+
+    private Scene lisaEse(Stage stage) {
+        Label uusNimi = new Label("Mis on uue eseme nimi?");
+        TextField nimi = new TextField();
+        Label uusKogus = new Label("Mitu ühikut soovid lisada?");
+        TextField kogus = new TextField();
+        Label uusPahaks = new Label("Sisesta kuupäev, millal läheb halvaks (dd/MM/yyyy:");
+        TextField pahaks = new TextField();
+        Button sisend = new Button("Lisa");
+        sisend.setOnAction(actionEvent -> {
+            try {
+                Date date = sdf.parse(pahaks.getText());
+                String nimeSisend = nimi.getText();
+                int koguseSisend = Integer.parseInt(kogus.getText());
+                Ese ese = new Ese(nimeSisend, date, koguseSisend);
+                külmkapp.lisaKülmkappi(ese);
+                System.out.println("Lisasin külmkappi");
+                stage.setScene(uusStseen(külmkapp, stage));
+            } catch (ParseException e) {
+                System.out.println("Midagi läks kuupäevaga valesti! Proovi uuesti.");
+                stage.setScene(lisaEse(stage));
+            }
+        });
+        VBox root = new VBox();
+        root.getChildren().addAll(uusNimi, nimi, uusKogus, kogus, uusPahaks, pahaks, sisend);
         root.setAlignment(Pos.CENTER);
         root.setSpacing(10);
         return new Scene(root, 400, 300);
