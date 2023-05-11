@@ -108,9 +108,8 @@ public class KulmkappApp extends Application {
                 stage.setScene(looSisuStseen(stage));
             if (Integer.parseInt(valikTekst) == 2)
                 stage.setScene(lisaEse(stage));
-                stage.setScene(looEemaldaEseTseen(stage));
             if (Integer.parseInt(valikTekst) == 3)
-                stage.setScene(lisaEse(stage));
+                stage.setScene(looEemaldaEseTseen(stage));
             if (Integer.parseInt(valikTekst) == 4)
                 stage.setScene(looHalvaksLäinudEemalduseTseen(stage));
             if (Integer.parseInt(valikTekst) == 5)

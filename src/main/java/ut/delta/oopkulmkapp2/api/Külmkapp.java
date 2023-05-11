@@ -182,6 +182,7 @@ public class Külmkapp {
      * @throws IOException
      */
     public void salvestaKülmkapp(String failiNimi) throws IOException {
+        System.out.println("asju: " + asjadKülmikus.size());
         PrintWriter pw = new PrintWriter(failiNimi);
         pw.println("K " + külmkapiSuurus + " " + sdf.format(viimatiMuudetud));
         for (Ese ese : asjadKülmikus) {
