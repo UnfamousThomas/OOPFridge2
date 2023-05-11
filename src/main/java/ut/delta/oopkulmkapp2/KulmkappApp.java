@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ut.delta.oopkulmkapp2.api.Ese;
+import ut.delta.oopkulmkapp2.api.FailLugemiseTõrgeErind;
 import ut.delta.oopkulmkapp2.api.Külmkapp;
 import ut.delta.oopkulmkapp2.api.SalvestamiseErind;
 
@@ -43,16 +44,16 @@ public class KulmkappApp extends Application {
         TextField sisend = new TextField();
         Button alusta = new Button("Alusta");
         alusta.setOnAction(event -> {
+            failiNimi = sisend.getText();
             //TODO EEMALDA PRINDID
             System.out.println("Alustan tööd");
             try {
                 külmkapp = loeKülmkapp(sisend.getText());
-            } catch (Exception e) {
-                System.out.println("Ei leidnud, loon uue");
-                primaryStage.setScene(küsiSuurust());
+                primaryStage.setScene(uusStseen(külmkapp, primaryStage));
+            } catch (FailLugemiseTõrgeErind e) {
+                System.out.println("Ei leidnud või ei osatud lugeda, loon uue");
+                primaryStage.setScene(küsiSuurust(primaryStage));
             }
-            failiNimi = sisend.getText();
-            primaryStage.setScene(uusStseen(külmkapp, primaryStage));
         });
         VBox root = new VBox();
         root.getChildren().addAll(pealkiri, failiKüsimine, sisend, alusta);
@@ -68,11 +69,14 @@ public class KulmkappApp extends Application {
      * Meetod et küsida külmkapi suurust
      * @return Stseen kus küsitakse suurust
      */
-    private Scene küsiSuurust() {
+    private Scene küsiSuurust(Stage stage) {
         Label pealkiri = new Label("Loon uue külmkapi, palun sisesta suurus:");
         TextField sisend = new TextField();
         Button sisesta = new Button("Esita");
-        sisesta.setOnAction(actionEvent -> suurus = Integer.parseInt(sisend.getText()));
+        sisesta.setOnAction(actionEvent -> {
+            suurus = Integer.parseInt(sisend.getText());
+            stage.setScene(uusStseen(külmkapp, stage));
+        });
         VBox root = new VBox();
         root.getChildren().addAll(pealkiri, sisend);
         root.setAlignment(Pos.CENTER);
@@ -241,12 +245,13 @@ public class KulmkappApp extends Application {
      * @throws ParseException Probleem faili formaadiga
      */
 
-    private static Külmkapp loeKülmkapp(String failiNimi) throws Exception {
+    private static Külmkapp loeKülmkapp(String failiNimi) throws FailLugemiseTõrgeErind {
         Külmkapp loodudKülmik;
         List<Ese> esemed = new ArrayList<>();
         int külmKapiSuurus = 0;
         Date külmkapiMuudetud = null;
-        try (Scanner failiScanner = new Scanner(new File(failiNimi))) {
+        File fail = new File(failiNimi);
+        try (Scanner failiScanner = new Scanner(fail)) {
             while (failiScanner.hasNextLine()) {
                 String[] elemendid = failiScanner.nextLine().split(" ");
                 if (elemendid[0].equals("K")) {
@@ -263,6 +268,8 @@ public class KulmkappApp extends Application {
             }
 
             loodudKülmik = new Külmkapp(külmKapiSuurus, esemed, külmkapiMuudetud);
+        } catch (IOException | ParseException e) {
+            throw new FailLugemiseTõrgeErind(failiNimi);
         }
         return loodudKülmik;
     }
