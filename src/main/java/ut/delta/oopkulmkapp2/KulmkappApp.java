@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ut.delta.oopkulmkapp2.api.Ese;
 import ut.delta.oopkulmkapp2.api.Külmkapp;
+import ut.delta.oopkulmkapp2.api.SalvestamiseErind;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,15 +28,22 @@ public class KulmkappApp extends Application {
     private TextField valik;
     private String valikTekst;
     private Külmkapp külmkapp;
+
+    //TODO: Mis kurat see on? Sa ei tee sellega midagi aga assignid selle ühes kohas.
     private int suurus;
 
+    /**
+     * Käivitab külmkapp GUI
+     * @param primaryStage Mis stageiga tegeleme
+     */
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage)  {
         Label pealkiri = new Label("Tere tulemast külmkapi haldamise programmi kasutama!");
         Label failiKüsimine = new Label("Palun sisesta fail, kust lugeda külmkapp.");
         TextField sisend = new TextField();
         Button alusta = new Button("Alusta");
         alusta.setOnAction(event -> {
+            //TODO EEMALDA PRINDID
             System.out.println("Alustan tööd");
             try {
                 külmkapp = loeKülmkapp(sisend.getText());
@@ -56,6 +64,10 @@ public class KulmkappApp extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Meetod et küsida külmkapi suurust
+     * @return Stseen kus küsitakse suurust
+     */
     private Scene küsiSuurust() {
         Label pealkiri = new Label("Loon uue külmkapi, palun sisesta suurus:");
         TextField sisend = new TextField();
@@ -68,6 +80,12 @@ public class KulmkappApp extends Application {
         return new Scene(root, 400, 300);
     }
 
+    /**
+     * Uus külmkappi menüü tseen
+     * @param külmkapp Külmkappi objekt millega tegeleme
+     * @param stage Stage kus toimub tegevus
+     * @return uus stseen
+     */
     private Scene uusStseen(Külmkapp külmkapp, Stage stage) {
         Label pealkiri = new Label("Mida soovid teha?");
         Label esimene = new Label("1 - Näita külmkapi esemeid");
@@ -80,20 +98,19 @@ public class KulmkappApp extends Application {
         sisesta.setOnAction(actionEvent -> {
             valikTekst = valik.getText();
             if (Integer.parseInt(valikTekst) == 1)
-                stage.setScene(valik1(stage));
+                stage.setScene(looSisuStseen(stage));
             if (Integer.parseInt(valikTekst) == 2)
-                stage.setScene(valik2(stage));
+                stage.setScene(looEemaldaEseTseen(stage));
             if (Integer.parseInt(valikTekst) == 3)
-                stage.setScene(valik3(stage));
+                stage.setScene(looHalvaksLäinudEemalduseTseen(stage));
             if (Integer.parseInt(valikTekst) == 4)
-                stage.setScene(valik4(stage));
+                stage.setScene(looSuvaliseEsemeStseen(stage));
             if (Integer.parseInt(valikTekst) == 5) {
                 try {
                     külmkapp.salvestaKülmkapp(failiNimi);
-
                     System.exit(0);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new SalvestamiseErind(failiNimi);
                 }
             }
         });
@@ -104,7 +121,12 @@ public class KulmkappApp extends Application {
         return new Scene(root, 400, 300);
     }
 
-    private Scene valik1(Stage stage) {
+    /**
+     * Meetod mis aktiveerib kui valitakse näidata sisu
+     * @param stage stage kus asi toimub
+     * @return Scene sisuga
+     */
+    private Scene looSisuStseen(Stage stage) {
         Label sisu = new Label("Näitan külmkapi sisu:");
         Label tooted = new Label(külmkapp.näitaKülmkappi());
         VBox root = new VBox();
@@ -116,7 +138,12 @@ public class KulmkappApp extends Application {
         return new Scene(root, 400, 300);
     }
 
-    private Scene valik2(Stage stage) {
+    /**
+     * Metood mis aktiveerib kui soovitakse eemaldada üks ese külmkapist
+     * @param stage Stage kus tegevus toimub
+     * @return Scene eemaldamisega
+     */
+    private Scene looEemaldaEseTseen(Stage stage) {
         if (külmkapp.kasOnTühi()) {
             Label eiSaa = new Label("Ei saa eemaldada, külmkapp on tühi.");
             VBox root = new VBox();
@@ -143,7 +170,12 @@ public class KulmkappApp extends Application {
         return new Scene(root, 400, 300);
     }
 
-    private Scene valik3(Stage stage) {
+    /**
+     * Meetod mis aktiveerub kui soovitakse eemaldada halvaks läinud asjad
+     * @param stage Kus tegevus toimub
+     * @return Scene peale eemaldamist
+     */
+    private Scene looHalvaksLäinudEemalduseTseen(Stage stage) {
         külmkapp.eemaldaKülmkapistHalvaksLäinud();
         Label eemaldatud = new Label("Halvaks läinud tooted eemaldatud!");
         VBox root = new VBox();
@@ -155,11 +187,19 @@ public class KulmkappApp extends Application {
         return new Scene(root, 400, 300);
     }
 
-    private Scene valik4(Stage stage) {
+    /**
+     * Aktiveerub kui soovitakse võtta suvaline ese
+     * @param stage
+     * @return Stseen peale eseme võtmist
+     */
+    private Scene looSuvaliseEsemeStseen(Stage stage) {
         Label silt = new Label();
         Ese ese = külmkapp.võtaSuvalineEse();
-        if (ese != null)
-            silt = new Label(prindiEse(ese));
+        if (ese != null) {
+            silt = new Label(tagastaEseStringina(ese));
+        } else {
+            silt = new Label("Külmkapp on tühi!");
+        }
         VBox root = new VBox();
         Button edasi = new Button("Edasi");
         edasi.setOnAction(actionEvent -> stage.setScene(uusStseen(külmkapp, stage)));
@@ -170,6 +210,10 @@ public class KulmkappApp extends Application {
     }
 
 
+    /**
+     * Main meetod mida kasutatakse et launch kutsuda välja
+     * @param args Command line argumendid
+     */
     public static void main(String[] args) {
         launch();
     }
@@ -180,10 +224,11 @@ public class KulmkappApp extends Application {
      *
      * @param ese Ese mida printida
      */
-    private static String prindiEse(Ese ese) {
-        System.out.println("Nimi: " + ese.getEsemeNimetus());
-        System.out.println("Kogus: " + ese.getKogus());
-        System.out.println("Läheb halvaks: " + sdf.format(ese.getLähebHalvaks()));
+    private static String tagastaEseStringina(Ese ese) {
+        //TODO: EEMALDA PRINDID
+        //System.out.println("Nimi: " + ese.getEsemeNimetus());
+        //System.out.println("Kogus: " + ese.getKogus());
+        //System.out.println("Läheb halvaks: " + sdf.format(ese.getLähebHalvaks()));
         return "Nimi: " + ese.getEsemeNimetus() + ", kogus: " + ese.getKogus() + ", läheb halvaks: " + sdf.format(ese.getLähebHalvaks());
     }
 
