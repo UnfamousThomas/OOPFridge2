@@ -91,7 +91,7 @@ public class Ese {
      */
     @Override
     public String toString() {
-        return esemeNimetus + " - " + kogus + "-" + sdf.format(lähebHalvaks);
+        return esemeNimetus + ", kogus: " + kogus + ", läheb halvaks: " + sdf.format(lähebHalvaks);
     }
 
     /**

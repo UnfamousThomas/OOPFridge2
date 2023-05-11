@@ -196,15 +196,14 @@ public class KulmkappApp extends Application {
         }
         Label misNimi = new Label("Mis on eseme nimi?");
         TextField tf = new TextField();
-        Button sisesta = new Button("Esita");
+        Button sisesta = new Button("Eemalda");
         sisesta.setOnAction(actionEvent -> {
             Ese ese = külmkapp.leiaEseNimetusega(tf.getText());
             külmkapp.kustutaEse(ese);
+            stage.setScene(uusStseen(külmkapp, stage));
         });
         VBox root = new VBox();
-        Button edasi = new Button("Edasi");
-        edasi.setOnAction(actionEvent -> stage.setScene(uusStseen(külmkapp, stage)));
-        root.getChildren().addAll(sisesta, misNimi, tf, edasi);
+        root.getChildren().addAll(misNimi, tf, sisesta);
         root.setAlignment(Pos.CENTER);
         root.setSpacing(10);
         return new Scene(root, 400, 300);
