@@ -94,6 +94,7 @@ public class KulmkappApp extends Application {
         Label neljas = new Label("4 - Võta suvaline ese külmkapist");
         Label viies = new Label("5 - Salvesta külmkapp ja lõpeta töö");
         valik = new TextField();
+        //TODO kui jõuab need nupputeks teha nii et pole numbreid vaja sisestada
         Button sisesta = new Button("Esita");
         sisesta.setOnAction(actionEvent -> {
             valikTekst = valik.getText();
