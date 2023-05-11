@@ -114,6 +114,11 @@ public class Külmkapp {
         setViimatiMuudetudNow();
     }
 
+    /**
+     * Leia ese nimega ja tagasta see
+     * @param nimetus Mis nimega eset otsime
+     * @return Eseme objekt
+     */
     public Ese leiaEseNimetusega(String nimetus) {
         for (Ese ese : asjadKülmikus) {
             if(ese.getEsemeNimetus().equals(nimetus)) return ese;
@@ -216,7 +221,7 @@ public class Külmkapp {
     }
 
     /**
-     * Eemaldab halvaks läinud esemed
+     * Eemaldab halvaks läinud esemed külmkappist
      */
     public void eemaldaKülmkapistHalvaksLäinud() {
         for (Ese ese : asjadKülmikus) {

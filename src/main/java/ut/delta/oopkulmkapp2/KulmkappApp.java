@@ -29,8 +29,6 @@ public class KulmkappApp extends Application {
     private TextField valik;
     private String valikTekst;
     private Külmkapp külmkapp;
-
-    //TODO: Mis kurat see on? Sa ei tee sellega midagi aga assignid selle ühes kohas.
     private int suurus;
 
     /**
@@ -100,7 +98,6 @@ public class KulmkappApp extends Application {
         Label viies = new Label("5 - Võta suvaline ese külmkapist");
         Label kuues = new Label("6 - Salvesta külmkapp ja lõpeta töö");
         valik = new TextField();
-        //TODO kui jõuab need nupputeks teha nii et pole numbreid vaja sisestada
         Button sisesta = new Button("Esita");
         sisesta.setOnAction(actionEvent -> {
             valikTekst = valik.getText();
@@ -232,14 +229,14 @@ public class KulmkappApp extends Application {
 
     /**
      * Aktiveerub kui soovitakse võtta suvaline ese
-     * @param stage
+     * @param stage Stage millele loome uue stseeni
      * @return Stseen peale eseme võtmist
      */
     private Scene looSuvaliseEsemeStseen(Stage stage) {
         Label silt = new Label();
         Ese ese = külmkapp.võtaSuvalineEse();
         if (ese != null) {
-            silt = new Label(tagastaEseStringina(ese));
+            silt = new Label(ese.toString());
         } else {
             silt = new Label("Külmkapp on tühi!");
         }
@@ -259,20 +256,6 @@ public class KulmkappApp extends Application {
      */
     public static void main(String[] args) {
         launch();
-    }
-
-
-    /**
-     * Prindib eseme objekti info
-     *
-     * @param ese Ese mida printida
-     */
-    private static String tagastaEseStringina(Ese ese) {
-        //TODO: EEMALDA PRINDID
-        //System.out.println("Nimi: " + ese.getEsemeNimetus());
-        //System.out.println("Kogus: " + ese.getKogus());
-        //System.out.println("Läheb halvaks: " + sdf.format(ese.getLähebHalvaks()));
-        return "Nimi: " + ese.getEsemeNimetus() + ", kogus: " + ese.getKogus() + ", läheb halvaks: " + sdf.format(ese.getLähebHalvaks());
     }
 
     /**
