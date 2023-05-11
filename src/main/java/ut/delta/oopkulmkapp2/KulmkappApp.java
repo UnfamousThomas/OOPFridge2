@@ -109,9 +109,9 @@ public class KulmkappApp extends Application {
             if (Integer.parseInt(valikTekst) == 2)
                 stage.setScene(lisaEse(stage));
             if (Integer.parseInt(valikTekst) == 3)
-                stage.setScene(looEemaldaEseTseen(stage));
+                stage.setScene(looEemaldaEseStseen(stage));
             if (Integer.parseInt(valikTekst) == 4)
-                stage.setScene(looHalvaksLäinudEemalduseTseen(stage));
+                stage.setScene(looHalvaksLäinudEemalduseStseen(stage));
             if (Integer.parseInt(valikTekst) == 5)
                 stage.setScene(looSuvaliseEsemeStseen(stage));
             if (Integer.parseInt(valikTekst) == 6) {
@@ -130,6 +130,11 @@ public class KulmkappApp extends Application {
         return new Scene(root, 400, 300);
     }
 
+    /**
+     * Küsib eseme nimetust, kogust ja kuupäeva, millal läheb halvaks
+     * @param stage Stage, kus toimub tegevus
+     * @return Uus stseen   
+     */
     private Scene lisaEse(Stage stage) {
         Label uusNimi = new Label("Mis on uue eseme nimi?");
         TextField nimi = new TextField();
@@ -181,7 +186,7 @@ public class KulmkappApp extends Application {
      * @param stage Stage kus tegevus toimub
      * @return Scene eemaldamisega
      */
-    private Scene looEemaldaEseTseen(Stage stage) {
+    private Scene looEemaldaEseStseen(Stage stage) {
         if (külmkapp.kasOnTühi()) {
             Label eiSaa = new Label("Ei saa eemaldada, külmkapp on tühi.");
             VBox root = new VBox();
@@ -213,7 +218,7 @@ public class KulmkappApp extends Application {
      * @param stage Kus tegevus toimub
      * @return Scene peale eemaldamist
      */
-    private Scene looHalvaksLäinudEemalduseTseen(Stage stage) {
+    private Scene looHalvaksLäinudEemalduseStseen(Stage stage) {
         külmkapp.eemaldaKülmkapistHalvaksLäinud();
         Label eemaldatud = new Label("Halvaks läinud tooted eemaldatud!");
         VBox root = new VBox();
