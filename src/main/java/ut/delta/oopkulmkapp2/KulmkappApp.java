@@ -270,19 +270,18 @@ public class KulmkappApp extends Application {
         Date külmkapiMuudetud = null;
         File fail = new File(failiNimi);
         try (Scanner failiScanner = new Scanner(fail, StandardCharsets.UTF_8)) {
+            String[] esimeseRea = failiScanner.nextLine().split(" ");
+            if(!esimeseRea[0].equals("K")) throw new FailLugemiseTõrgeErind(failiNimi);
+            külmKapiSuurus = Integer.parseInt(esimeseRea[1]);
+            külmkapiMuudetud = sdf.parse(esimeseRea[2]);
             while (failiScanner.hasNextLine()) {
                 String[] elemendid = failiScanner.nextLine().split(" ");
-                if (elemendid[0].equals("K")) {
-                    külmKapiSuurus = Integer.parseInt(elemendid[1]);
-                    külmkapiMuudetud = sdf.parse(elemendid[2]);
+                String esemeNimetus = elemendid[0];
+                int kogus = Integer.parseInt(elemendid[1]);
+                Date date = sdf.parse(elemendid[2]);
+                Ese ese = new Ese(esemeNimetus, date, kogus);
+                esemed.add(ese);
 
-                } else {
-                    String esemeNimetus = elemendid[0];
-                    int kogus = Integer.parseInt(elemendid[1]);
-                    Date date = sdf.parse(elemendid[2]);
-                    Ese ese = new Ese(esemeNimetus, date, kogus);
-                    esemed.add(ese);
-                }
             }
 
             loodudKülmik = new Külmkapp(külmKapiSuurus, esemed, külmkapiMuudetud);
