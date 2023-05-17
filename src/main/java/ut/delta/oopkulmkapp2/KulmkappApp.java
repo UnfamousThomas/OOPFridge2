@@ -15,6 +15,7 @@ import ut.delta.oopkulmkapp2.api.SalvestamiseErind;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,13 +44,10 @@ public class KulmkappApp extends Application {
         Button alusta = new Button("Alusta");
         alusta.setOnAction(event -> {
             failiNimi = sisend.getText();
-            //TODO EEMALDA PRINDID
-            System.out.println("Alustan tööd");
             try {
                 külmkapp = loeKülmkapp(sisend.getText());
                 primaryStage.setScene(uusStseen(külmkapp, primaryStage));
             } catch (FailLugemiseTõrgeErind e) {
-                System.out.println("Ei leidnud või ei osatud lugeda, loon uue");
                 primaryStage.setScene(küsiSuurust(primaryStage));
             }
         });
@@ -271,7 +269,7 @@ public class KulmkappApp extends Application {
         int külmKapiSuurus = 0;
         Date külmkapiMuudetud = null;
         File fail = new File(failiNimi);
-        try (Scanner failiScanner = new Scanner(fail)) {
+        try (Scanner failiScanner = new Scanner(fail, StandardCharsets.UTF_8)) {
             while (failiScanner.hasNextLine()) {
                 String[] elemendid = failiScanner.nextLine().split(" ");
                 if (elemendid[0].equals("K")) {

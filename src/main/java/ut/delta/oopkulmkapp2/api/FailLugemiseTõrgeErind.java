@@ -7,6 +7,6 @@ public class FailLugemiseTõrgeErind extends RuntimeException {
      * @param failinimi Failinimi mida üritasime lugeda
      */
     public FailLugemiseTõrgeErind(String failinimi) {
-        super("Faili: " + failinimi + " lugemisel esines tõrge.");
+        super("Faili: " + failinimi + " lugemisel esines tõrge. Kontrollige, kas fail sisaldab külmkappi kujul: K suurus muutmiskuupäev");
     }
 }
