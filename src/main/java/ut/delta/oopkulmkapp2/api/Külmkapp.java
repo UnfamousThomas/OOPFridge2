@@ -2,6 +2,7 @@ package ut.delta.oopkulmkapp2.api;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -188,7 +189,7 @@ public class Külmkapp {
      */
     public void salvestaKülmkapp(String failiNimi) throws IOException {
         System.out.println("asju: " + asjadKülmikus.size());
-        PrintWriter pw = new PrintWriter(failiNimi);
+        PrintWriter pw = new PrintWriter(failiNimi, StandardCharsets.UTF_8);
         pw.println("K " + külmkapiSuurus + " " + sdf.format(viimatiMuudetud));
         for (Ese ese : asjadKülmikus) {
             pw.println(ese.getEsemeNimetus() + " " + ese.getKogus() + " " + sdf.format(ese.getLähebHalvaks()));
@@ -224,11 +225,15 @@ public class Külmkapp {
      * Eemaldab halvaks läinud esemed külmkappist
      */
     public void eemaldaKülmkapistHalvaksLäinud() {
+        List<Ese> esemedEemaldada = new ArrayList<>();
         for (Ese ese : asjadKülmikus) {
             if(ese.kasOnHalvaksLäinud()) {
                 System.out.println("Eemaldasin: " + ese.getEsemeNimetus() + " - " + ese.getKogus() + " - " + sdf.format(ese.getLähebHalvaks()));
-                eemaldaKülmkapist(ese);
+                esemedEemaldada.add(ese);
             }
+        }
+        for (Ese ese : esemedEemaldada) {
+            eemaldaKülmkapist(ese);
         }
     }
 }
